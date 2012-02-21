@@ -17,18 +17,24 @@ values.SeriesInstanceUID = dicomuid;
 
 d = dir('*.dcm');
 
-% Load the radiotherapy planning structure
+% Load the radiotherapy planning structure and anonymize it
 
-rtplanning = dicominfo('rtss.dcm');
+dicomanon('rtss.dcm','anon.rtss.dcm','update', values)
+rtplanning = dicominfo('anon.rtss.dcm');
 
 % Load all dicom files in the directory and extract SOP id's
 
 for p = 1:numel(d)
  
  currentInfo = dicominfo(d(p).name);
+ currentModality = currentInfo.Modality;
  currentSOPClassUID = currentInfo.SOPClassUID;
  currentSOPInstanceUID = currentInfo.SOPInstanceUID;
  
+ if strcmp(currentModality,'RTSTRUCT')
+ 
+ else
+     
  % Create new filename for anonymized dicom files
  
  [~, name,~] = fileparts(d(p).name);
@@ -49,6 +55,8 @@ for p = 1:numel(d)
  rtplanning = searchstruct(rtplanning, currentSOPClassUID, updatedSOPClassUID);
  rtplanning = searchstruct(rtplanning, currentSOPInstanceUID, updatedSOPInstanceUID);
   
+ end
+ 
 end
 
 % Save planning structure to dicom file
