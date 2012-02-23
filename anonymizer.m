@@ -19,8 +19,7 @@ d = dir('*.dcm');
 
 % Load the radiotherapy planning structure and anonymize it
 
-dicomanon('rtss.dcm','anon.rtss.dcm','update', values)
-rtplanning = dicominfo('anon.rtss.dcm');
+rtplanning = dicominfo('rtss.dcm');
 
 % Load all dicom files in the directory and extract SOP id's
 
@@ -33,6 +32,8 @@ for p = 1:numel(d)
  
  if strcmp(currentModality,'RTSTRUCT')
  
+  disp('Found contour file')   
+     
  else
      
  % Create new filename for anonymized dicom files
@@ -62,3 +63,4 @@ end
 % Save planning structure to dicom file
 
 dicomwrite(dicomread('rtss.dcm'),'anon.rtss.dcm',rtplanning,'CreateMode', 'copy')
+dicomanon('anon.rtss.dcm','anon.rtss.dcm','update', values)
